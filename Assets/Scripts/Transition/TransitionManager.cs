@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class TransitionManager : Singleton<TransitionManager>
 {
+    [SceneName]
+    public string startScene;
     public CanvasGroup fadeCanvasGroup;
     public float fadeDuration;
     public bool isFade;
+
+    private void Start()
+    {
+        StartCoroutine(TransitionToScene(String.Empty, startScene));
+    }
+
     public void Transition(string from, string to)
     {
         if (!isFade)
@@ -19,10 +28,15 @@ public class TransitionManager : Singleton<TransitionManager>
     private IEnumerator TransitionToScene(string from,string goTo)
     {
         yield return Fade(1);
-        yield return SceneManager.UnloadSceneAsync(from);
+        if (from != String.Empty)
+        {
+            EventHandle.CallBeforeSceneUnloadEvent();
+            yield return SceneManager.UnloadSceneAsync(from);
+        }
         yield return  SceneManager.LoadSceneAsync(goTo,LoadSceneMode.Additive);
         Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
         SceneManager.SetActiveScene(newScene);
+        EventHandle.CallAfterSceneLoadEvent();
         yield return Fade(0);
     }
 
