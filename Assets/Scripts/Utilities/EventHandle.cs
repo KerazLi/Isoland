@@ -20,4 +20,15 @@ public static class EventHandle
     {
         AfterSceneLoadEvent?.Invoke();
     }
+
+    public static event Action<ItemDataDetails, bool> ItemSelectEvent;
+    public static void CallItemSelectEvent(ItemDataDetails itemDataDetails, bool isSelected)
+    {
+        ItemSelectEvent?.Invoke(itemDataDetails, isSelected);
+    }
+    public static  event Action<ItemName> ItemUseEvent;
+    public static void CallItemUseEvent(ItemName itemName)
+    {
+        ItemUseEvent?.Invoke(itemName);
+    }
 }
