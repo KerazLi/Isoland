@@ -3,35 +3,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 邮箱类，继承自Interactive，表示一个可以交互的邮箱对象。
+/// </summary>
 public class MailBox : Interactive
 {
+    /// <summary>
+    /// 箱子的精灵渲染器，用于改变邮箱的外观。
+    /// </summary>
     private SpriteRenderer spriteRenderer;
+    /// <summary>
+    /// 箱子的2D盒碰撞器，用于检测与其它物体的碰撞。
+    /// </summary>
     private BoxCollider2D boxCollider2D;
+    /// <summary>
+    /// 邮箱打开时的精灵，用于视觉效果。
+    /// </summary>
     public Sprite openSprite;
 
+    /// <summary>
+    /// 初始化组件，包括精灵渲染器和盒碰撞器。
+    /// </summary>
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
+    /// <summary>
+    /// 当物体启用时，注册场景加载后的事件处理函数。
+    /// </summary>
     private void OnEnable()
     {
         EventHandle.AfterSceneLoadEvent += OnAfterSceneLoadEvent;
     }
-    
 
+    /// <summary>
+    /// 当物体禁用时，取消注册场景加载后的事件处理函数。
+    /// </summary>
     private void OnDisable()
     {
         EventHandle.AfterSceneLoadEvent -= OnAfterSceneLoadEvent;
     }
+
     /// <summary>
-    /// 场景加载后事件的响应函数。
+    /// 场景加载后事件的处理函数。
+    /// 根据isDone的值决定是否显示邮箱为打开状态，并隐藏或显示子对象。
     /// </summary>
-    /// <remarks>
-    /// 此函数用于处理场景加载后的特定逻辑。它首先检查一个标志（isDone）以决定是隐藏子对象还是启用特定的精灵和碰撞器。
-    /// 这种设计可能用于实现一种开/关状态机制，或者用于在场景加载后的特定条件下设置对象的状态。
-    /// </remarks>
     private void OnAfterSceneLoadEvent()
     {
         // 如果isDone标志为false，隐藏子对象。这可能是一种避免过早交互或显示未完成内容的机制。
@@ -48,14 +66,11 @@ public class MailBox : Interactive
         }
     }
 
-
     /// <summary>
-    /// 当按钮被点击时执行的动作。
+    /// 点击交互动作的处理函数。
+    /// 改变邮箱的外观为打开状态，并使第一个子对象变为活跃状态。
     /// </summary>
-    /// <remarks>
-    /// 此方法旨在改变按钮的外观和行为以响应点击事件。它通过更换按钮的精灵图像来表示按钮被打开的状态，
-    /// 并激活按钮下的一个子对象，这可能是一个显示更多内容的面板或一个动画效果。
-    /// </remarks>
+    /// <param name="info">交互信息，此处未使用。</param>
     public override void OnclickedAction()
     {
         // 更换按钮的精灵图像为打开状态的图像。
